@@ -448,13 +448,14 @@ transform:translateX(-50%) scale(1.1);box-shadow:0 0 16px rgba(255,36,56,.95);
 
 /* Десктопная перестановка; мобильная раскладка ниже остаётся прежней. */
 @media(min-width:1001px){
+.hex-module.module{z-index:4;}
 .hex-module.module.m1{transform:translate(315px,-174px) !important;}
 .hex-module.module.m2{transform:translate(315px,-168px) !important;}
 .hex-module.module.m3{transform:translate(7px,360px) !important;}
 .hex-module.module.m4{transform:translate(315px,192px) !important;}
 .hex-module.module.m5{transform:translate(-301px,-158px) !important;}
 .hex-module.module.m6{transform:translate(-609px,-342px) !important;}
-.hex-module.module.crown{transform:translate(-7px,346px) !important;opacity:0 !important;}
+.hex-module.module.crown{transform:translate(-7px,346px) !important;opacity:0 !important;pointer-events:none;}
 }
 
 @media(max-width:1140px){
@@ -471,7 +472,7 @@ transform:translateX(-50%) scale(1.1);box-shadow:0 0 16px rgba(255,36,56,.95);
 .hex-module.module.m4{transform:translate(269px,168px) !important;}
 .hex-module.module.m5{transform:translate(-255px,-134px) !important;}
 .hex-module.module.m6{transform:translate(-517px,-290px) !important;}
-.hex-module.module.crown{transform:translate(-6px,296px) !important;}
+.hex-module.module.crown{transform:translate(-6px,296px) !important;pointer-events:none;}
 }
 @media(max-width:1000px){
 .hex-outline{display:none;}
@@ -1679,7 +1680,7 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
     </nav>
     <div class="footer-requisites">ИП Акбутаев Рустам Тимурович · ИНН 770974041537 · ОГРНИП 323774600546391</div>
     <div class="footer-requisites">
-  <a href="https://ilinykhegor.ru/" target="_blank" rel="noopener" style="color:var(--red);transition:opacity .2s;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">САЙТ РАЗРАБОТАН</a>
+  <a href="https://t.me/ilinykhegor" target="_blank" rel="noopener" style="color:var(--red);transition:opacity .2s;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">САЙТ РАЗРАБОТАН</a>
 </div>
   </div>
 </footer>
@@ -2059,31 +2060,26 @@ return false;
 }
 /* ---------- body scroll lock for modals (prevents the page and the
 modal from fighting over the wheel/touch scroll at the same time) */
-let __scrollLockY = 0;
+let __scrollLockHtmlOverflow = '';
+let __scrollLockBodyOverflow = '';
 function lockBodyScroll(){
-__scrollLockY = window.scrollY || window.pageYOffset || 0;
-document.body.style.position = 'fixed';
-document.body.style.top = (-__scrollLockY) + 'px';
-document.body.style.left = '0';
-document.body.style.right = '0';
-document.body.style.width = '100%';
+__scrollLockHtmlOverflow = document.documentElement.style.overflow;
+__scrollLockBodyOverflow = document.body.style.overflow;
+document.documentElement.style.overflow = 'hidden';
+document.body.style.overflow = 'hidden';
 }
 function unlockBodyScroll(){
-document.body.style.position = '';
-document.body.style.top = '';
-document.body.style.left = '';
-document.body.style.right = '';
-document.body.style.width = '';
-window.scrollTo(0, __scrollLockY);
+document.documentElement.style.overflow = __scrollLockHtmlOverflow;
+document.body.style.overflow = __scrollLockBodyOverflow;
 }
 /* watch every modal-overlay for open/close via class changes, so the
 lock applies no matter which button/handler toggled it */
 document.querySelectorAll('.modal-overlay').forEach(overlay=>{
 const mo = new MutationObserver(()=>{
 const anyOpen = document.querySelector('.modal-overlay.open');
-if(anyOpen && document.body.style.position !== 'fixed'){
+if(anyOpen && document.documentElement.style.overflow !== 'hidden'){
 lockBodyScroll();
-} else if(!anyOpen && document.body.style.position === 'fixed'){
+} else if(!anyOpen && document.documentElement.style.overflow === 'hidden'){
 unlockBodyScroll();
 }
 });
