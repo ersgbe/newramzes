@@ -306,38 +306,37 @@ position:relative;
 .card h3{font-size:19px;margin-bottom:12px;text-transform:none;letter-spacing:0;}
 .card p{font-size:16px;color:var(--gray);font-family:'Inter';}
 .card .tag{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);text-transform:uppercase;letter-spacing:.08em;}
-.card.flip-card{cursor:pointer;}
-.card.flip-card .flip-text-wrap{display:grid;margin-top:2px;}
-.card.flip-card .flip-text{
-grid-area:1 / 1;
-opacity:0;visibility:hidden;
-transition:opacity .3s ease, visibility .3s ease;
-font-size:16px;color:var(--gray);font-family:'Inter';
+.card.ab-card{cursor:default;align-items:stretch;}
+.card.ab-card > div{display:flex;flex-direction:column;width:100%;}
+.ab-card h3{line-height:1.25;min-height:2.5em;}
+.ab-block{margin-top:16px;}
+.ab-block:first-of-type{margin-top:14px;}
+.ab-label{
+display:flex;align-items:center;gap:8px;
+font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;
+margin-bottom:8px;
 }
-.card.flip-card .flip-text.flip-now{opacity:1;visibility:visible;}
-.card.flip-card.flipped .flip-text.flip-now{opacity:0;visibility:hidden;}
-.card.flip-card .flip-text.flip-result{color:#f3d9db;}
-.card.flip-card.flipped .flip-text.flip-result{opacity:1;visibility:visible;}
-.card.flip-card .flip-hint{
-display:block;margin-top:16px;
-font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;
-color:var(--red);opacity:.9;
-transition:opacity .2s ease, visibility .2s ease, margin .2s ease, height .2s ease;
+.ab-label .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ab-now .ab-label{color:var(--gray-dim);}
+.ab-now .ab-label .dot{background:var(--gray-dim);}
+.ab-now{min-height:6.1em;}
+.ab-now p{color:var(--gray);font-size:15px;font-family:'Inter';line-height:1.55;}
+.ab-divider{
+display:flex;align-items:center;gap:8px;margin:14px 0;
+color:var(--red);font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1;
 }
-.card.flip-card.flipped .flip-hint{opacity:0;visibility:hidden;height:0;margin-top:0;overflow:hidden;}
-.card.flip-card .flip-result-tag{
-display:block;margin-top:16px;
-font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;
-color:var(--red);opacity:0;visibility:hidden;height:0;overflow:hidden;
-transition:opacity .2s ease, visibility .2s ease;
+.ab-divider::before{content:'';flex:1;height:1px;background:var(--line-soft);}
+.ab-divider .arrow{flex-shrink:0;}
+.ab-result{
+background:linear-gradient(160deg,#1c070b,#100405);
+border:1px solid rgba(255,36,56,.35);
+padding:14px 16px;
+min-height:120px;
+box-shadow:0 0 22px var(--red-glow-soft) inset;
 }
-.card.flip-card.flipped .flip-result-tag{opacity:.9;visibility:visible;height:auto;}
-.card.flip-card.flipped{
-background:linear-gradient(180deg,#1c060a,#0c0304);
-border-color:var(--red-2);
-box-shadow:0 0 30px var(--red-glow-soft) inset;
-}
-.card.flip-card.flipped h3{color:var(--red);}
+.ab-result .ab-label{color:var(--red);margin-bottom:6px;}
+.ab-result .ab-label .dot{background:var(--red);box-shadow:0 0 8px var(--red);}
+.ab-result p{color:#f2f0f1;font-size:15px;font-family:'Inter';font-weight:500;line-height:1.5;}
 .promise-text{font-size:22px;font-family:'Inter',sans-serif;font-weight:500;line-height:1.4;max-width:760px;}
 .win-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:16px;}
 .win{background:var(--bg-panel);padding:24px;text-align:center;font-size:16px;font-weight:500;font-family:'Inter';color:var(--white);position:relative;}
@@ -397,7 +396,7 @@ width:min(980px,92%);height:auto;opacity:.5;pointer-events:none;z-index:0;
 }
 .hex-outline .spin-outline{animation:spin-slow 90s linear infinite;transform-origin:center;}
 .modules-hex{display:flex;justify-content:center;align-items:flex-start;position:relative;z-index:1;}
-.hex-col{display:flex;flex-direction:column;gap:8px;}
+.hex-col{display:flex;flex-direction:column;gap:8px;position:relative;}
 .hex-col + .hex-col{margin-left:-72px;}
 .hex-col.offset{margin-top:172px;}
 .hex-crown{position:relative;display:flex;justify-content:center;margin-bottom:-172px;z-index:2;pointer-events:none;}
@@ -434,18 +433,31 @@ border-color:var(--red);
 .hex-module.module .mnum{margin-bottom:6px;transition:color .25s;}
 .hex-module.module h3{margin:14px 0 10px;transition:color .25s;}
 .hex-module.module p{transition:color .25s;}
+/* Плюсик-индикатор кликабельности: круглая кнопка с крестом, внизу по центру шестиугольника */
+.hex-module.module:not(.crown)::after{
+content:"";position:absolute;left:50%;bottom:18px;width:22px;height:22px;display:block;
+background:linear-gradient(#fff 0 0) center/11px 2px no-repeat,
+linear-gradient(#fff 0 0) center/2px 11px no-repeat,
+var(--red);border-radius:50%;box-shadow:0 0 10px rgba(255,36,56,.7);
+transform:translateX(-50%) scale(.92);opacity:.95;
+transition:transform .2s ease, box-shadow .2s ease;
+}
+.hex-module.module:not(.crown):hover::after{
+transform:translateX(-50%) scale(1.1);box-shadow:0 0 16px rgba(255,36,56,.95);
+}
+
 @media(max-width:1140px){
 .hex-module.module{width:320px;height:288px;padding:38px 62px;}
 .hex-col + .hex-col{margin-left:-58px;}
 .hex-col.offset{margin-top:148px;}
 .hex-crown{margin-bottom:-148px;}
+.hex-module.module:not(.crown)::after{bottom:14px;width:20px;height:20px;background-size:10px 2px,2px 10px;}
 }
 @media(max-width:1000px){
 .hex-outline{display:none;}
 .modules-hex-wrap{padding:0;}
 .modules-hex{display:block;}
 .hex-col{display:contents;}
-.hex-crown{margin-bottom:0;}
 .hex-module.module{
 width:100%;height:auto;clip-path:none;
 padding:34px 26px;text-align:left;align-items:flex-start;
@@ -456,6 +468,11 @@ background:var(--bg-panel);border:1px solid var(--line);border-top:none;
 background:linear-gradient(160deg,#2a0a10,#150507) !important;
 border:1px solid var(--red) !important;
 }
+/* На узких экранах карточки прямоугольные — переносим плюсик в верхний правый угол */
+.hex-module.module:not(.crown)::after{
+left:auto;right:20px;top:22px;bottom:auto;transform:none;
+}
+.hex-module.module:not(.crown):hover::after{transform:scale(1.08);}
 }
 .module{
 background:var(--bg-panel);padding:38px 28px;min-height:270px;
@@ -874,8 +891,18 @@ html,body{overflow-x:hidden;max-width:100vw;}
 .grid-cards{grid-template-columns:repeat(2,1fr);}
 .card{padding:14px 10px;min-height:0;}
 .card h3{font-size:13px;margin-bottom:6px;line-height:1.2;}
+.ab-card h3{min-height:6em;}
 .card p{font-size:12px;}
 .card .tag{font-size:10px;}
+.ab-block{margin-top:12px;}
+.ab-block:first-of-type{margin-top:10px;}
+.ab-now{min-height:8.3em;}
+.ab-label{font-size:9.5px;gap:6px;margin-bottom:5px;}
+.ab-label .dot{width:5px;height:5px;}
+.ab-now p{font-size:12px;}
+.ab-divider{margin:10px 0;font-size:11px;gap:6px;}
+.ab-result{padding:10px 11px;min-height:126px;}
+.ab-result p{font-size:12px;}
 .win-row{grid-template-columns:1fr;}
 .promise-text{font-size:18px;}
 .cost-compare{grid-template-columns:1fr 1fr;}
@@ -922,6 +949,7 @@ text-align:left;align-items:flex-start;
 .hex-module.module.crown .mnum{font-size:12px;}
 .hex-module.module.crown h3{font-size:19px;margin:10px 0 8px;}
 .hex-module.module.crown p{display:block;font-size:14px;}
+.hex-module.module:not(.crown)::after{right:12px;top:12px;width:18px;height:18px;background-size:9px 2px,2px 9px;}
 .format-cards{grid-template-columns:repeat(2,1fr);}
 .fcard{padding:18px 14px;min-height:0;}
 .fcard .fnum{font-size:10px;}
@@ -1085,79 +1113,97 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
     <div class="sec-head">
       <span class="mono eyebrow">02 // тебе подходит</span>
       <h2>Узнаёшь себя?</h2>
-      <p>Выбери свою боль — нажми на карточку, чтобы увидеть результат.</p>
+      <p>Выбери свою боль — и сразу увидишь, куда она приведёт.</p>
     </div>
     <div class="grid-cards">
-      <div class="card flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="card ab-card">
         <div>
           <span class="tag">[ 01 ]</span>
           <h3>Ступор при знакомстве</h3>
-          <div class="flip-text-wrap">
-            <p class="flip-text flip-now">Видишь девушку, которая нравится, — начинаешь тупить и искать идеальный момент.</p>
-            <p class="flip-text flip-result">Подходишь сам и понимаешь, как развивать знакомство дальше.</p>
+          <div class="ab-block ab-now">
+            <span class="ab-label"><span class="dot"></span>Сейчас</span>
+            <p>Видишь девушку, которая нравится, — начинаешь тупить и искать идеальный момент.</p>
           </div>
-          <span class="flip-hint">Нажми — посмотри свой результат</span>
-          <span class="flip-result-tag">Результат</span>
+          <div class="ab-divider"><span class="arrow">→</span></div>
+          <div class="ab-block ab-result">
+            <span class="ab-label"><span class="dot"></span>Результат</span>
+            <p>Подходишь сам и понимаешь, как развивать знакомство дальше.</p>
+          </div>
         </div>
       </div>
-      <div class="card flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="card ab-card">
         <div>
           <span class="tag">[ 02 ]</span>
           <h3>Результаты есть — пока ты в форме и девушка не сносит голову</h3>
-          <div class="flip-text-wrap">
-            <p class="flip-text flip-now">С одними всё легко, но стоит просесть по состоянию или сильно залипнуть на девушку — начинаешь сыпаться.</p>
-            <p class="flip-text flip-result">Действуешь стабильнее и не теряешь себя даже рядом с той, которая сильно нравится.</p>
+          <div class="ab-block ab-now">
+            <span class="ab-label"><span class="dot"></span>Сейчас</span>
+            <p>С одними всё легко, но стоит просесть по состоянию или сильно залипнуть на девушку — начинаешь сыпаться.</p>
           </div>
-          <span class="flip-hint">Нажми — посмотри свой результат</span>
-          <span class="flip-result-tag">Результат</span>
+          <div class="ab-divider"><span class="arrow">→</span></div>
+          <div class="ab-block ab-result">
+            <span class="ab-label"><span class="dot"></span>Результат</span>
+            <p>Действуешь стабильнее и не теряешь себя даже рядом с той, которая сильно нравится.</p>
+          </div>
         </div>
       </div>
-      <div class="card flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="card ab-card">
         <div>
           <span class="tag">[ 03 ]</span>
           <h3>После долгих отношений / брака</h3>
-          <div class="flip-text-wrap">
-            <p class="flip-text flip-now">Отвык от знакомств и не понимаешь, как нормально вернуться в дейтинг.</p>
-            <p class="flip-text flip-result">Возвращаешь форму, спокойно знакомишься и снова выбираешь сам.</p>
+          <div class="ab-block ab-now">
+            <span class="ab-label"><span class="dot"></span>Сейчас</span>
+            <p>Отвык от знакомств и не понимаешь, как нормально вернуться в дейтинг.</p>
           </div>
-          <span class="flip-hint">Нажми — посмотри свой результат</span>
-          <span class="flip-result-tag">Результат</span>
+          <div class="ab-divider"><span class="arrow">→</span></div>
+          <div class="ab-block ab-result">
+            <span class="ab-label"><span class="dot"></span>Результат</span>
+            <p>Возвращаешь форму, спокойно знакомишься и снова выбираешь сам.</p>
+          </div>
         </div>
       </div>
-      <div class="card flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="card ab-card">
         <div>
           <span class="tag">[ 04 ]</span>
           <h3>Покупаешь внимание</h3>
-          <div class="flip-text-wrap">
-            <p class="flip-text flip-now">Не понимаешь, интересен девушке ты или то, что ты ей даёшь.</p>
-            <p class="flip-text flip-result">Привлекаешь собой, а не ресторанами, подарками и ресурсами.</p>
+          <div class="ab-block ab-now">
+            <span class="ab-label"><span class="dot"></span>Сейчас</span>
+            <p>Не понимаешь, интересен девушке ты или то, что ты ей даёшь.</p>
           </div>
-          <span class="flip-hint">Нажми — посмотри свой результат</span>
-          <span class="flip-result-tag">Результат</span>
+          <div class="ab-divider"><span class="arrow">→</span></div>
+          <div class="ab-block ab-result">
+            <span class="ab-label"><span class="dot"></span>Результат</span>
+            <p>Привлекаешь собой, а не ресторанами, подарками и ресурсами.</p>
+          </div>
         </div>
       </div>
-      <div class="card flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="card ab-card">
         <div>
           <span class="tag">[ 05 ]</span>
           <h3>Хочешь девушку для отношений</h3>
-          <div class="flip-text-wrap">
-            <p class="flip-text flip-now">Не хочешь количества — хочешь одну классную, но выбирать почти не из кого.</p>
-            <p class="flip-text flip-result">Создаёшь выбор и строишь отношения с девушкой, которую выбрал сам.</p>
+          <div class="ab-block ab-now">
+            <span class="ab-label"><span class="dot"></span>Сейчас</span>
+            <p>Не хочешь количества — хочешь одну классную, но выбирать почти не из кого.</p>
           </div>
-          <span class="flip-hint">Нажми — посмотри свой результат</span>
-          <span class="flip-result-tag">Результат</span>
+          <div class="ab-divider"><span class="arrow">→</span></div>
+          <div class="ab-block ab-result">
+            <span class="ab-label"><span class="dot"></span>Результат</span>
+            <p>Создаёшь выбор и строишь отношения с девушкой, которую выбрал сам.</p>
+          </div>
         </div>
       </div>
-      <div class="card flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="card ab-card">
         <div>
           <span class="tag">[ 06 ]</span>
           <h3>Хочешь вернуть себя</h3>
-          <div class="flip-text-wrap">
-            <p class="flip-text flip-now">Просели уверенность, границы и опора на собственные решения.</p>
-            <p class="flip-text flip-result">Возвращаешь внутреннюю опору, решительность и меньше зависишь от женского одобрения.</p>
+          <div class="ab-block ab-now">
+            <span class="ab-label"><span class="dot"></span>Сейчас</span>
+            <p>Просели уверенность, границы и опора на собственные решения.</p>
           </div>
-          <span class="flip-hint">Нажми — посмотри свой результат</span>
-          <span class="flip-result-tag">Результат</span>
+          <div class="ab-divider"><span class="arrow">→</span></div>
+          <div class="ab-block ab-result">
+            <span class="ab-label"><span class="dot"></span>Результат</span>
+            <p>Возвращаешь внутреннюю опору, решительность и меньше зависишь от женского одобрения.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1247,37 +1293,42 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
         </div>
       </div>
       <div class="modules-hex">
+        <span class="hex-arrow a1" aria-hidden="true">»</span>
+        <span class="hex-arrow a2" aria-hidden="true">»</span>
+        <span class="hex-arrow a3" aria-hidden="true">»</span>
+        <span class="hex-arrow a4" aria-hidden="true">»</span>
+        <span class="hex-arrow a5" aria-hidden="true">»</span>
         <div class="hex-col">
-          <div class="hex-module module" onclick="openPolicy('module-1')">
+          <div class="hex-module module m1" onclick="openPolicy('module-1')">
             <span class="mnum">Модуль 01</span>
             <h3>Опора на себя</h3>
             <p>Наведёшь порядок в режиме, дисциплине и мышлении. Разберёшь ограничивающие убеждения, поймёшь свои ценности и поставишь чёткие цели на обучение.</p>
           </div>
-          <div class="hex-module module" onclick="openPolicy('module-2')">
-            <span class="mnum">Модуль 02</span>
-            <h3>Внутри женской головы</h3>
-            <p>Разберёшь 12 триггеров влечения, женские проверки и манипуляции, типы девушек. Поймёшь, что привлекает и отталкивает</p>
-          </div>
-        </div>
-        <div class="hex-col offset">
-          <div class="hex-module module" onclick="openPolicy('module-3')">
-            <span class="mnum">Модуль 03</span>
-            <h3>«Я решил — я подошёл»</h3>
-            <p>Прокачаешь язык тела, знакомства вживую, сторителлинг и умение считывать реакцию девушки. Перестанешь тупить в моменте знакомства.</p>
-          </div>
-          <div class="hex-module module" onclick="openPolicy('module-4')">
+          <div class="hex-module module m4" onclick="openPolicy('module-4')">
             <span class="mnum">Модуль 04</span>
             <h3>Цифровой мост</h3>
             <p>Научишься переписываться и созваниваться так, чтобы доводить до свидания, а не сливать контакт в пустоту после «привет».</p>
           </div>
         </div>
-        <div class="hex-col">
-          <div class="hex-module module" onclick="openPolicy('module-5')">
+        <div class="hex-col offset">
+          <div class="hex-module module m2" onclick="openPolicy('module-2')">
+            <span class="mnum">Модуль 02</span>
+            <h3>Внутри женской головы</h3>
+            <p>Разберёшь 12 триггеров влечения, женские проверки и манипуляции, типы девушек. Поймёшь, что привлекает и отталкивает</p>
+          </div>
+          <div class="hex-module module m5" onclick="openPolicy('module-5')">
             <span class="mnum">Модуль 05</span>
             <h3>Свидания как кино</h3>
             <p>Соберёшь сценарии свиданий, которые создают эмоции и близость — без шаблонных ресторанов, неловких пауз и больших трат.</p>
           </div>
-          <div class="hex-module module" onclick="openPolicy('module-6')">
+        </div>
+        <div class="hex-col">
+          <div class="hex-module module m3" onclick="openPolicy('module-3')">
+            <span class="mnum">Модуль 03</span>
+            <h3>«Я решил — я подошёл»</h3>
+            <p>Прокачаешь язык тела, знакомства вживую, сторителлинг и умение считывать реакцию девушки. Перестанешь тупить в моменте знакомства.</p>
+          </div>
+          <div class="hex-module module m6" onclick="openPolicy('module-6')">
             <span class="mnum">Модуль 06</span>
             <h3>Уединение и секс</h3>
             <p>Разберёшь логистику сближения, прелюдию, работу с сомнениями девушки и заботу после — уверенно, без давления и неловкости.</p>
