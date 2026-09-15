@@ -446,12 +446,32 @@ transition:transform .2s ease, box-shadow .2s ease;
 transform:translateX(-50%) scale(1.1);box-shadow:0 0 16px rgba(255,36,56,.95);
 }
 
+/* Десктопная перестановка; мобильная раскладка ниже остаётся прежней. */
+@media(min-width:1001px){
+.hex-module.module.m1{transform:translate(315px,-174px) !important;}
+.hex-module.module.m2{transform:translate(315px,-168px) !important;}
+.hex-module.module.m3{transform:translate(7px,360px) !important;}
+.hex-module.module.m4{transform:translate(315px,192px) !important;}
+.hex-module.module.m5{transform:translate(-301px,-158px) !important;}
+.hex-module.module.m6{transform:translate(-609px,-342px) !important;}
+.hex-module.module.crown{transform:translate(-7px,346px) !important;opacity:0 !important;}
+}
+
 @media(max-width:1140px){
 .hex-module.module{width:320px;height:288px;padding:38px 62px;}
 .hex-col + .hex-col{margin-left:-58px;}
 .hex-col.offset{margin-top:148px;}
 .hex-crown{margin-bottom:-148px;}
 .hex-module.module:not(.crown)::after{bottom:14px;width:20px;height:20px;background-size:10px 2px,2px 10px;}
+}
+@media(min-width:1001px) and (max-width:1140px){
+.hex-module.module.m1{transform:translate(269px,-148px) !important;}
+.hex-module.module.m2{transform:translate(269px,-142px) !important;}
+.hex-module.module.m3{transform:translate(7px,310px) !important;}
+.hex-module.module.m4{transform:translate(269px,168px) !important;}
+.hex-module.module.m5{transform:translate(-255px,-134px) !important;}
+.hex-module.module.m6{transform:translate(-517px,-290px) !important;}
+.hex-module.module.crown{transform:translate(-6px,296px) !important;}
 }
 @media(max-width:1000px){
 .hex-outline{display:none;}
@@ -1293,11 +1313,7 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
         </div>
       </div>
       <div class="modules-hex">
-        <span class="hex-arrow a1" aria-hidden="true">»</span>
-        <span class="hex-arrow a2" aria-hidden="true">»</span>
-        <span class="hex-arrow a3" aria-hidden="true">»</span>
-        <span class="hex-arrow a4" aria-hidden="true">»</span>
-        <span class="hex-arrow a5" aria-hidden="true">»</span>
+        
         <div class="hex-col">
           <div class="hex-module module m1" onclick="openPolicy('module-1')">
             <span class="mnum">Модуль 01</span>
