@@ -418,7 +418,7 @@ background:var(--bg-panel);
 border:1px solid var(--line);
 display:flex;flex-direction:column;justify-content:center;align-items:center;
 text-align:center;
-padding:44px 74px;
+padding:52px 74px 52px;
 cursor:pointer;
 transition:box-shadow .25s, background .25s, border-color .25s;
 }
@@ -430,20 +430,68 @@ border-color:var(--red);
 .hex-module.module:not(.crown):hover .mnum{color:#fff;}
 .hex-module.module:not(.crown):hover h3{color:var(--red);}
 .hex-module.module:not(.crown):hover p{color:#efd3d5;}
-.hex-module.module .mnum{margin-bottom:6px;transition:color .25s;}
-.hex-module.module h3{margin:14px 0 10px;transition:color .25s;}
+.hex-module.module .mnum{margin-bottom:8px;transition:color .25s;}
+.hex-module.module h3{margin:12px 0 8px;transition:color .25s;}
 .hex-module.module p{transition:color .25s;}
-/* Плюсик-индикатор кликабельности: круглая кнопка с крестом, внизу по центру шестиугольника */
-.hex-module.module:not(.crown)::after{
-content:"";position:absolute;left:50%;bottom:18px;width:22px;height:22px;display:block;
-background:linear-gradient(#fff 0 0) center/11px 2px no-repeat,
-linear-gradient(#fff 0 0) center/2px 11px no-repeat,
-var(--red);border-radius:50%;box-shadow:0 0 10px rgba(255,36,56,.7);
-transform:translateX(-50%) scale(.92);opacity:.95;
-transition:transform .2s ease, box-shadow .2s ease;
+/* Номер модуля: слово остаётся компактным, номер становится главным акцентом */
+.hex-module.module .mnum{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:0;
+line-height:1;
+margin-bottom:8px;
 }
-.hex-module.module:not(.crown):hover::after{
-transform:translateX(-50%) scale(1.1);box-shadow:0 0 16px rgba(255,36,56,.95);
+.hex-module.module .mnum .mlabel{
+font-size:13px;
+letter-spacing:.08em;
+text-transform:uppercase;
+color:var(--red);
+font-weight:400;
+}
+.hex-module.module .mnum .mnumber{
+font-family:'Oswald',sans-serif;
+font-size:53px;
+font-weight:700;
+line-height:.92;
+letter-spacing:.01em;
+color:var(--red);
+transition:color .25s, text-shadow .25s;
+}
+.hex-module.module:not(.crown) p{
+margin-bottom:52px;
+}
+.hex-module.module:not(.crown) .hex-more{
+position:absolute;
+left:18px;
+right:18px;
+bottom:8px;
+height:48px;
+border:1px solid rgba(255,36,56,.55);
+border-bottom:none;
+background:linear-gradient(180deg,#1a080b,#0f0507);
+color:var(--red);
+font-family:'JetBrains Mono',monospace;
+font-size:12px;
+font-weight:600;
+letter-spacing:.08em;
+text-transform:uppercase;
+cursor:pointer;
+clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 100%,0 100%);
+transition:background .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;
+z-index:5;
+}
+.hex-module.module:not(.crown) .hex-more:hover{
+background:var(--red);
+color:#08080a;
+border-color:var(--red);
+box-shadow:0 0 22px var(--red-glow);
+transform:translateY(-1px);
+}
+.hex-module.module:not(.crown):hover .mnum .mnumber{
+color:#fff;
+text-shadow:0 0 14px var(--red-glow);
 }
 
 /* Десктопная перестановка; мобильная раскладка ниже остаётся прежней. */
@@ -489,11 +537,23 @@ background:var(--bg-panel);border:1px solid var(--line);border-top:none;
 background:linear-gradient(160deg,#2a0a10,#150507) !important;
 border:1px solid var(--red) !important;
 }
-/* На узких экранах карточки прямоугольные — переносим плюсик в верхний правый угол */
-.hex-module.module:not(.crown)::after{
-left:auto;right:20px;top:22px;bottom:auto;transform:none;
+/* На мобильных шестиугольники становятся карточками, поэтому CTA остаётся внизу */
+.hex-module.module .mnum{
+align-items:flex-start;
 }
-.hex-module.module:not(.crown):hover::after{transform:scale(1.08);}
+.hex-module.module .mnum .mnumber{
+font-size:42px;
+}
+.hex-module.module:not(.crown) .hex-more{
+position:relative;
+left:auto;
+right:auto;
+bottom:auto;
+width:100%;
+margin-top:54px;
+height:46px;
+clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 100%,0 100%);
+}
 }
 .module{
 background:var(--bg-panel);padding:38px 28px;min-height:270px;
@@ -1317,38 +1377,38 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
         
         <div class="hex-col">
           <div class="hex-module module m1" onclick="openPolicy('module-1')">
-            <span class="mnum">Модуль 01</span>
+            <span class="mnum"><span class="mlabel">Модуль</span><span class="mnumber">01</span></span>
             <h3>Опора на себя</h3>
-            <p>Наведёшь порядок в режиме, дисциплине и мышлении. Разберёшь ограничивающие убеждения, поймёшь свои ценности и поставишь чёткие цели на обучение.</p>
+            <p>Режим, дисциплина, мышление и личные цели.</p><button class="hex-more" type="button" onclick="openPolicy('module-1');event.stopPropagation();">Открыть модуль</button>
           </div>
           <div class="hex-module module m4" onclick="openPolicy('module-4')">
-            <span class="mnum">Модуль 04</span>
+            <span class="mnum"><span class="mlabel">Модуль</span><span class="mnumber">04</span></span>
             <h3>Цифровой мост</h3>
-            <p>Научишься переписываться и созваниваться так, чтобы доводить до свидания, а не сливать контакт в пустоту после «привет».</p>
+            <p>Переписка и созвоны до реального свидания.</p><button class="hex-more" type="button" onclick="openPolicy('module-4');event.stopPropagation();">Открыть модуль</button>
           </div>
         </div>
         <div class="hex-col offset">
           <div class="hex-module module m2" onclick="openPolicy('module-2')">
-            <span class="mnum">Модуль 02</span>
+            <span class="mnum"><span class="mlabel">Модуль</span><span class="mnumber">02</span></span>
             <h3>Внутри женской головы</h3>
-            <p>Разберёшь 12 триггеров влечения, женские проверки и манипуляции, типы девушек. Поймёшь, что привлекает и отталкивает</p>
+            <p>Влечение, женские проверки и типы девушек.</p><button class="hex-more" type="button" onclick="openPolicy('module-2');event.stopPropagation();">Открыть модуль</button>
           </div>
           <div class="hex-module module m5" onclick="openPolicy('module-5')">
-            <span class="mnum">Модуль 05</span>
+            <span class="mnum"><span class="mlabel">Модуль</span><span class="mnumber">05</span></span>
             <h3>Свидания как кино</h3>
-            <p>Соберёшь сценарии свиданий, которые создают эмоции и близость — без шаблонных ресторанов, неловких пауз и больших трат.</p>
+            <p>Сценарии свиданий, эмоции, близость и атмосфера.</p><button class="hex-more" type="button" onclick="openPolicy('module-5');event.stopPropagation();">Открыть модуль</button>
           </div>
         </div>
         <div class="hex-col">
           <div class="hex-module module m3" onclick="openPolicy('module-3')">
-            <span class="mnum">Модуль 03</span>
+            <span class="mnum"><span class="mlabel">Модуль</span><span class="mnumber">03</span></span>
             <h3>«Я решил — я подошёл»</h3>
-            <p>Прокачаешь язык тела, знакомства вживую, сторителлинг и умение считывать реакцию девушки. Перестанешь тупить в моменте знакомства.</p>
+            <p>Знакомства, язык тела и уверенная подача.</p><button class="hex-more" type="button" onclick="openPolicy('module-3');event.stopPropagation();">Открыть модуль</button>
           </div>
           <div class="hex-module module m6" onclick="openPolicy('module-6')">
-            <span class="mnum">Модуль 06</span>
+            <span class="mnum"><span class="mlabel">Модуль</span><span class="mnumber">06</span></span>
             <h3>Уединение и секс</h3>
-            <p>Разберёшь логистику сближения, прелюдию, работу с сомнениями девушки и заботу после — уверенно, без давления и неловкости.</p>
+            <p>Сближение, прелюдия, сомнения и забота после.</p><button class="hex-more" type="button" onclick="openPolicy('module-6');event.stopPropagation();">Открыть модуль</button>
           </div>
         </div>
       </div>
