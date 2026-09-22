@@ -687,13 +687,36 @@ box-shadow:0 0 40px var(--red-glow-soft) inset, 0 20px 40px rgba(0,0,0,.4);
 @media(min-width:861px){
   .tier-index{margin-bottom:12px;}
   .tier>div>ul:not(.tier-details-desktop){display:none;}
-  .tier-details-desktop{display:block;list-style:none!important;margin:0 0 20px!important;padding:0;font-size:12px;line-height:1.45;}
-  .tier-details-desktop li{padding:9px 0!important;border-top:1px solid var(--line-soft);color:#d2d2d6;overflow-wrap:anywhere;}
+  /* На ПК синхронизируем вертикальные строки тарифов: места, заголовки
+     разделов и соответствующие пункты стоят на одной высоте во всех карточках. */
+  .tier > div > .tname{height:46px;min-height:46px;}
+  .tier > div > .tseats{height:18px;min-height:18px;margin-bottom:12px;}
+  .tier > div > .tpitch{height:45px;min-height:45px;margin-bottom:20px;}
+  .tier-details-desktop{
+    display:grid;
+    grid-template-rows:34px repeat(7,62px) 34px repeat(8,62px) 18px;
+    align-content:start;
+    list-style:none!important;
+    margin:0 0 20px!important;
+    padding:0;
+    font-size:12px;
+    line-height:1.45;
+  }
+  .tier-details-desktop li{
+    min-width:0;
+    min-height:0;
+    height:auto;
+    padding:9px 0!important;
+    border-top:1px solid var(--line-soft);
+    color:#d2d2d6;
+    overflow-wrap:anywhere;
+    overflow:hidden;
+  }
   .tier-details-desktop li:first-child{border-top:0;}
   .tier-details-desktop li.marked{color:var(--red);}
   .tier-details-desktop li.muted-item{color:#d2d2d6;}
   .tier-details-desktop li.common-item::before{content:'✓';position:absolute;left:5px;top:9px;color:#eee;font-size:12px;}
-  .tier-details-desktop li.detail-heading{padding:13px 0 7px!important;color:var(--white);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em;font-size:10px;font-weight:600;border-top:1px solid rgba(255,36,56,.3);}
+  .tier-details-desktop li.detail-heading{padding:9px 0 7px!important;color:var(--white);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em;font-size:10px;font-weight:600;border-top:1px solid rgba(255,36,56,.3);}
   .tier-details-desktop li.detail-muted{color:#777;text-decoration:line-through;}
   .tier-details-desktop li.detail-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gray);}
 }
@@ -922,6 +945,10 @@ background:none;border:none;cursor:pointer;color:var(--gray);line-height:1;trans
   /* После физического поворота телефона показываем обычную горизонтальную таблицу.
      Никаких transform/rotate на body или html нет, поэтому остальной сайт не переворачивается. */
   @media(orientation:landscape){
+    #tierModal .compare-table-mobile{
+      width:130%;
+      min-width:130%;
+    }
     #tierModal .modal-rotate-hint{display:none;}
     #tierModal{
       padding:12px;
@@ -1266,6 +1293,7 @@ html,body{overflow-x:hidden;max-width:100vw;}
 .btn,.btn-outline{width:100%;text-align:center;padding:18px 24px;font-size:14px;}
 .hint{font-size:13px;text-align:center;}
 .sec-head{margin-bottom:36px;}
+#format .sec-head{margin-bottom:61px;}
 .sec-head h2{font-size:28px;}
 .sec-head p{font-size:var(--text-mobile-lead);}
 .grid-cards{grid-template-columns:repeat(2,1fr);}
@@ -1429,6 +1457,432 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
   }
 }
 
+
+/* ---------- ТАРИФЫ: выравнивание содержимого карточек на ПК ---------- */
+@media(min-width:861px){
+  .tiers .tier{
+    /* Одинаковые строки шапки, чтобы названия/места/описания шли строго по одной линии. */
+    display:grid;
+    grid-template-rows:auto auto auto 58px 1fr auto;
+  }
+
+  .tiers .tier > div:first-child{
+    display:contents;
+  }
+
+  .tiers .tier-index{
+    grid-row:1;
+  }
+
+  .tiers .tier .tname{
+    grid-row:2;
+    min-height:46px;
+    display:flex;
+    align-items:flex-start;
+  }
+
+  .tiers .tier .tseats{
+    grid-row:3;
+    min-height:30px;
+  }
+
+  .tiers .tier .tpitch{
+    grid-row:4;
+    min-height:58px;
+    margin-bottom:0;
+  }
+
+  .tiers .tier .tier-details-desktop{
+    grid-row:5;
+    align-self:stretch;
+    display:flex;
+    flex-direction:column;
+    margin:0 0 20px!important;
+  }
+
+  /* Высоту каждой строки выставляет JS по самому высокому пункту
+     в этой же строке. Поэтому коротким пунктам добавляется ровно столько
+     свободного места, сколько нужно, чтобы следующий пункт начинался
+     на одной вертикальной линии во всех карточках. */
+  .tiers .tier-details-desktop > li{
+    min-height:0;
+    display:flex;
+    align-items:flex-start;
+    box-sizing:border-box;
+    padding:9px 0!important;
+  }
+
+  .tiers .tier-details-desktop > li.detail-heading{
+    min-height:0;
+    padding:13px 0 7px!important;
+    align-items:center;
+  }
+
+  .tiers .tier-details-desktop > li.detail-meta{
+    min-height:1px;
+    height:1px!important;
+    padding:0!important;
+  }
+
+  .tiers .tier > .tier-cta{
+    grid-row:6;
+  }
+}
+</style>
+<style>
+@media (min-width: 861px){
+  .tier .tseats{
+    padding-top: 6px;
+  }
+}
+</style>
+
+
+<style>
+@media (max-width: 860px){
+  /* Оставляем кнопку «Сравнить тарифы», убираем следующие шаги */
+  .compare-row ~ * {
+    /* intentionally scoped below via the selectors added in the script */
+  }
+
+  /* Скрываем содержимое popup таблицы тарифов на телефоне */
+  .modal-overlay,
+  .compare-modal,
+  .tariff-modal,
+  #compareModal,
+  #tariffModal {
+    display: none !important;
+  }
+
+  /* После кнопки сравнения скрываем последующие шаги/блоки */
+  .compare-row ~ .steps,
+  .compare-row ~ .next-steps,
+  .compare-row ~ .steps-section,
+  .compare-row ~ section.steps,
+  .compare-row ~ section.next-steps {
+    display: none !important;
+  }
+}
+</style>
+
+
+<style>
+/* ---------- НОВОЕ СРАВНЕНИЕ ТАРИФОВ: ТОЛЬКО ТЕЛЕФОН ---------- */
+@media (max-width: 860px){
+  body.mobile-compare-open{overflow:hidden!important;}
+
+  #tierModal{
+    display:none!important;
+    position:fixed!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100dvh!important;
+    padding:0!important;
+    margin:0!important;
+    background:#080808!important;
+    z-index:9999!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+    backdrop-filter:none!important;
+  }
+  #tierModal.open{
+    display:flex!important;
+  }
+  #tierModal > .modal-rotate-hint{
+    display:none!important;
+  }
+  #tierModal > .modal-box{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100dvh!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    overflow:hidden!important;
+    background:#101010!important;
+  }
+
+  #tierModal > .modal-box > *:not(.mobile-compare){
+    display:none!important;
+  }
+  #tierModal .mobile-compare{
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    color:#eee;
+    font-family:'Inter',sans-serif;
+  }
+  .mobile-compare-top{
+    position:relative;
+    flex:0 0 42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-bottom:1px solid #303030;
+    background:#111;
+  }
+  .mobile-compare-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:.1em;
+    color:#eee;
+  }
+  .mobile-compare-close{
+    position:absolute;
+    right:8px;
+    top:5px;
+    width:32px;
+    height:32px;
+    border:0;
+    background:transparent;
+    color:#aaa;
+    font-size:28px;
+    line-height:28px;
+    padding:0;
+  }
+  .mobile-compare-head{
+    flex:0 0 auto;
+    display:grid;
+    grid-template-columns:30% repeat(5,14%);
+    width:100%;
+    background:#1d1d1d;
+    border-bottom:2px solid #3a3a3a;
+    box-shadow:0 3px 10px rgba(0,0,0,.45);
+    z-index:5;
+  }
+  .mobile-compare-head > div{
+    min-width:0;
+    box-sizing:border-box;
+    border-right:1px solid #333;
+  }
+  .mc-head-label{
+    display:flex;
+    align-items:center;
+    padding:5px 4px;
+    color:#777;
+    font:600 7px/1.2 'JetBrains Mono',monospace;
+    letter-spacing:.04em;
+  }
+  .mc-plan{
+    min-height:70px;
+    padding:5px 2px;
+    text-align:center;
+    font:600 7px/1.2 'JetBrains Mono',monospace;
+    color:#aaa;
+  }
+  .mc-plan span{
+    display:block;
+    margin-top:3px;
+    font-family:'Inter',sans-serif;
+    font-size:7px;
+    line-height:1.2;
+    color:#eee;
+  }
+  .mc-plan.mc-s4,.mc-plan.mc-s5{color:#ff2438;}
+  .mc-plan.mc-s2{color:#d8a62b;}
+  .mc-plan.mc-s3{color:#4e9b6b;}
+  .mc-plan.mc-s4 span,.mc-plan.mc-s5 span{color:#ff2438;}
+
+  .mobile-compare-scroll{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    padding-bottom:24px;
+  }
+  .mc-section{
+    position:sticky;
+    top:0;
+    z-index:3;
+    padding:6px 5px;
+    background:#363634;
+    border-top:1px solid #454543;
+    border-bottom:1px solid #454543;
+    color:#ddd;
+    font:600 7px/1.2 'JetBrains Mono',monospace;
+    letter-spacing:.07em;
+  }
+  .mc-row{
+    display:grid;
+    grid-template-columns:30% repeat(5,14%);
+    width:100%;
+    border-bottom:1px solid #292929;
+    background:#151515;
+  }
+  .mc-row > div{
+    min-width:0;
+    box-sizing:border-box;
+    border-right:1px solid #292929;
+  }
+  .mc-label{
+    padding:7px 4px;
+    color:#eee;
+    font-size:7px;
+    line-height:1.28;
+    overflow-wrap:anywhere;
+  }
+  .mc-cell{
+    padding:7px 2px;
+    text-align:center;
+    color:#ddd;
+    font-size:6.5px;
+    line-height:1.3;
+    overflow-wrap:anywhere;
+  }
+  .mc-cell.common{
+    color:#eee;
+    font-weight:700;
+    font-size:10px;
+  }
+  .mc-cell.no{
+    color:#666;
+    text-decoration:line-through;
+  }
+  .mc-cell.s2{color:#d8a62b;font-weight:600;}
+  .mc-cell.s3{color:#4e9b6b;font-weight:600;}
+  .mc-cell.s4{color:#9a63b5;font-weight:600;}
+  .mc-cell.s5{color:#d84d91;font-weight:600;}
+  .mc-row.mc-price-old .mc-cell{
+    color:#666;
+    text-decoration:line-through;
+  }
+  .mc-row.mc-price .mc-cell{
+    font-size:7px;
+    font-weight:700;
+    color:#eee;
+  }
+  .mc-row.mc-price .mc-cell.s4{color:#9a63b5;}
+  .mc-row.mc-price .mc-cell.s5{color:#d84d91;}
+  .mc-row.mc-seats .mc-cell{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    color:#eee;
+  }
+  .mc-row.mc-seats .mc-cell.s2{color:#d8a62b;}
+  .mc-row.mc-seats .mc-cell.s3{color:#4e9b6b;}
+  .mc-row.mc-seats .mc-cell.s4{color:#9a63b5;}
+  .mc-row.mc-seats .mc-cell.s5{color:#d84d91;}
+}
+
+@media (max-width:380px){
+  .mc-plan{font-size:6.5px;}
+  .mc-plan span{font-size:6.5px;}
+  .mc-label{font-size:6.7px;}
+  .mc-cell{font-size:6.2px;}
+}
+</style>
+
+
+<style id="mobile-compare-v2">
+@media (max-width: 860px){
+  .mobile-compare-overlay .mobile-compare-table-wrap{
+    width:100%;
+    overflow-x:auto !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
+
+  .mobile-compare-overlay .mobile-compare-table{
+    width:max-content !important;
+    min-width:760px !important;
+    table-layout:fixed !important;
+    border-collapse:collapse;
+  }
+
+  .mobile-compare-overlay .mobile-compare-table th,
+  .mobile-compare-overlay .mobile-compare-table td{
+    color:#fff !important;
+    font-size:14px !important;
+    line-height:1.45 !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+    vertical-align:top !important;
+    box-sizing:border-box !important;
+  }
+
+  .mobile-compare-overlay .mobile-compare-table th{
+    min-width:150px !important;
+    max-width:150px !important;
+  }
+
+  .mobile-compare-overlay .mobile-compare-table td{
+    min-width:150px !important;
+    max-width:150px !important;
+  }
+
+  /* Keep every cell visually contained even for long Russian text. */
+  .mobile-compare-overlay .mobile-compare-table td *,
+  .mobile-compare-overlay .mobile-compare-table th *{
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+  }
+
+  /* Fixed tariff header remains visible while the table is scrolled vertically. */
+  .mobile-compare-overlay .mobile-compare-sticky{
+    position:sticky !important;
+    top:0 !important;
+    z-index:20 !important;
+    background:#171717 !important;
+  }
+
+  /* The horizontal scrollbar stays usable at the bottom of the table area. */
+  .mobile-compare-overlay .mobile-compare-table-wrap{
+    scrollbar-width:thin;
+  }
+
+  /* User requested all popup text to be white. */
+  .mobile-compare-overlay,
+  .mobile-compare-overlay *{
+    color:#fff !important;
+  }
+}
+</style>
+
+
+<style id="mobile-compare-hide-prices">
+@media (max-width: 860px){
+  .mobile-compare-overlay .compare-price,
+  .mobile-compare-overlay .old-price,
+  .mobile-compare-overlay .new-price,
+  .mobile-compare-overlay .price,
+  .mobile-compare-overlay .oldprice,
+  .mobile-compare-overlay .current-price,
+  .mobile-compare-overlay .tariff-price,
+  .mobile-compare-overlay [class*="price"],
+  .mobile-compare-overlay [class*="Price"]{
+    display:none !important;
+  }
+}
+</style>
+
+
+<style id="mobile-compare-column-width-fix">
+@media (max-width:860px){
+  /* Все колонки мобильного сравнения увеличены на 30% без переноса названий тарифов. */
+  .mobile-compare{
+    overflow-x:auto;
+    overflow-y:hidden;
+  }
+  .mobile-compare-head,
+  .mc-row{
+    width:130%;
+    min-width:130%;
+    grid-template-columns:39% repeat(5,18.2%);
+  }
+  .mc-plan span{
+    white-space:nowrap;
+    overflow:visible;
+  }
+}
 </style>
 </head>
 <body>
@@ -1649,30 +2103,6 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
   </div>
 </section>
 
-<section id="outcomes">
-  <span class="kanji-mark" style="right:-30px;bottom:-10%;font-size:180px;transform:rotate(4deg);">魂</span>
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="mono eyebrow">04 // по итогу</span>
-      <h2>Что ты получишь</h2>
-    </div>
-    <div class="author-grid">
-      <ul class="outcomes">
-        <li><span class="idx hex-icon">01</span><span>Вернёшь опору и внутренний стержень</span></li>
-        <li><span class="idx hex-icon">02</span><span>Знакомишься, когда сам решил — а не когда повезло</span></li>
-        <li><span class="idx hex-icon">03</span><span>Управляешь общением, а не надеешься на удачу</span></li>
-        <li><span class="idx hex-icon">04</span><span>Выбираешь качественнее, а не то, что само идёт в руки</span></li>
-        <li><span class="idx hex-icon">05</span><span>Вернёшь драйв, азарт и вкус к жизни</span></li>
-      </ul>
-      <div class="photo-frame hud">
-        <span class="bl"></span><span class="br"></span>
-        <img src="images/8.png" alt="Мужайся!" width="1200" height="1331" loading="lazy" decoding="async">
-        <div class="scanline"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="program">
   <div class="bg-photo bg-photo-left" data-speed="0.06" aria-hidden="true">
     <img src="images/5.webp" alt="" width="402" height="655" loading="lazy" decoding="async">
@@ -1682,7 +2112,7 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
   <span class="kanji-stamp white pop" style="--rot:5deg;left:30px;top:24px;font-size:56px;transform:rotate(5deg);">力</span>
   <div class="wrap">
     <div class="sec-head">
-      <span class="mono eyebrow">05 // программа</span>
+      <span class="mono eyebrow">04 // программа</span>
       <h2>6 модулей</h2>
       <p>Более 30 часов уроков. Каждый модуль — новый уровень контроля. Нажми на модуль, чтобы увидеть подробности.</p>
     </div>
@@ -1736,6 +2166,30 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
             <p>Сближение, прелюдия, сомнения и забота после.</p><button class="hex-more" type="button" onclick="openPolicy('module-6');event.stopPropagation();">Открыть модуль</button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="outcomes">
+  <span class="kanji-mark" style="right:-30px;bottom:-10%;font-size:180px;transform:rotate(4deg);">魂</span>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="mono eyebrow">05 // по итогу</span>
+      <h2>Что ты получишь</h2>
+    </div>
+    <div class="author-grid">
+      <ul class="outcomes">
+        <li><span class="idx hex-icon">01</span><span>Вернёшь опору и внутренний стержень</span></li>
+        <li><span class="idx hex-icon">02</span><span>Знакомишься, когда сам решил — а не когда повезло</span></li>
+        <li><span class="idx hex-icon">03</span><span>Управляешь общением, а не надеешься на удачу</span></li>
+        <li><span class="idx hex-icon">04</span><span>Выбираешь качественнее, а не то, что само идёт в руки</span></li>
+        <li><span class="idx hex-icon">05</span><span>Вернёшь драйв, азарт и вкус к жизни</span></li>
+      </ul>
+      <div class="photo-frame hud">
+        <span class="bl"></span><span class="br"></span>
+        <img src="images/8.png" alt="Мужайся!" width="1200" height="1331" loading="lazy" decoding="async">
+        <div class="scanline"></div>
       </div>
     </div>
   </div>
@@ -2000,6 +2454,124 @@ transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
     <span>Для сравнения всех тарифов в таблице нужен горизонтальный просмотр.</span>
   </div>
   <div class="modal-box">
+
+<div class="mobile-compare">
+  <div class="mobile-compare-top">
+    <div class="mobile-compare-title">СРАВНЕНИЕ ТАРИФОВ</div>
+    <button class="mobile-compare-close" type="button" onclick="closeTierModal()" aria-label="Закрыть">×</button>
+  </div>
+
+  <div class="mobile-compare-head">
+    <div class="mc-head-label">ПУНКТ</div>
+    <div class="mc-plan mc-s1">01<br><span>Самостоятельный</span></div>
+    <div class="mc-plan mc-s2">02<br><span>Сопровождение<br>в пятёрках</span></div>
+    <div class="mc-plan mc-s3">03<br><span>Мастер-группа<br>с Рамзесом</span></div>
+    <div class="mc-plan mc-s4">04<br><span>Буткемп</span></div>
+    <div class="mc-plan mc-s5">05<br><span>Индива<br>1-на-1</span></div>
+  </div>
+
+  <div class="mobile-compare-scroll">
+    <div class="mc-section">ОБУЧЕНИЕ И МАТЕРИАЛЫ</div>
+
+    <div class="mc-row">
+      <div class="mc-label">6 основных модулей MAN UP!<br>(более 30 часов уроков)</div>
+      <div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">База знаний: дополнительные уроки от Рамзеса и приглашённых спикеров</div>
+      <div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Мини-курс по уверенности в себе I AM</div>
+      <div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Курс по онлайн-дэйтингу и перепискам Texting Ninja</div>
+      <div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell s3">Входит</div><div class="mc-cell s4">Входит</div><div class="mc-cell s5">Входит</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Дополнительные конспекты и другие материалы</div>
+      <div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Фрагменты / полные видеозаписи знакомств Рамзеса</div>
+      <div class="mc-cell">Фрагменты:<br><br>– дневная игра<br>– ночная игра<br>– свидания<br>– вызвоны<br><br>– в разных странах<br>– на русском и английском языках</div>
+      <div class="mc-cell s2">Полные видеозаписи знакомств Рамзеса с разборами:<br><br>– дневная игра<br>– ночная игра<br>– свидания<br>– вызвоны<br><br>– в разных странах<br>– на русском и английском языках<br><br>(12+ часов)</div>
+      <div class="mc-cell s3">Полные видеозаписи знакомств Рамзеса с разборами:<br><br>– дневная игра<br>– ночная игра<br>– свидания<br>– вызвоны<br><br>– в разных странах<br>– на русском и английском языках<br><br>(12+ часов)</div>
+      <div class="mc-cell s4">Полные видеозаписи знакомств Рамзеса с разборами:<br><br>– дневная игра<br>– ночная игра<br>– свидания<br>– вызвоны<br><br>– в разных странах<br>– на русском и английском языках<br><br>(12+ часов)</div>
+      <div class="mc-cell s5">Полные видеозаписи знакомств Рамзеса с разборами:<br><br>– дневная игра<br>– ночная игра<br>– свидания<br>– вызвоны<br><br>– в разных странах<br>– на русском и английском языках<br><br>(12+ часов)</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Доступ к курсу и всем материалам</div>
+      <div class="mc-cell s1">9 месяцев</div><div class="mc-cell s2">12 месяцев</div><div class="mc-cell s3">18 месяцев</div><div class="mc-cell s4">Неограниченный</div><div class="mc-cell s5">Неограниченный</div>
+    </div>
+
+    <div class="mc-section">ПОДДЕРЖКА И ПРАКТИКА</div>
+
+    <div class="mc-row">
+      <div class="mc-label">Мини-группа</div>
+      <div class="mc-cell no">—</div>
+      <div class="mc-cell s2">Мини-группа (5 человек) с сопровождением тренера проекта</div>
+      <div class="mc-cell s3">Мини-группа (5 человек) с сопровождением Рамзеса</div>
+      <div class="mc-cell s4">Мини-группа (3–4 человека) с сопровождением Рамзеса вживую</div>
+      <div class="mc-cell s5">Индивидуальная работа с Рамзесом 1 на 1</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Отдельный чат</div>
+      <div class="mc-cell no">—</div><div class="mc-cell s2">Отдельный чат пятёрки с тренером проекта</div><div class="mc-cell s3">Отдельный чат мастер-группы с Рамзесом</div><div class="mc-cell s4">Отдельный чат буткемпа с Рамзесом</div><div class="mc-cell s5">Отдельный чат с Рамзесом для индивидуальной работы</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Проверка домашних заданий</div>
+      <div class="mc-cell no">—</div><div class="mc-cell s2">Проверка домашних заданий</div><div class="mc-cell s3">Развёрнутая обратная связь от Рамзеса по домашним заданиям</div><div class="mc-cell s4">Развёрнутая обратная связь от Рамзеса по домашним заданиям</div><div class="mc-cell s5">Развёрнутая обратная связь от Рамзеса по домашним заданиям</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Мастермайнды / обратная связь</div>
+      <div class="mc-cell no">—</div><div class="mc-cell s2">Мастермайнды раз в 2 недели с тренером пятёрки</div><div class="mc-cell s3">Мастермайнды раз в 2 недели с Рамзесом</div><div class="mc-cell s4">Неограниченная обратная связь от Рамзеса в течение месяца</div><div class="mc-cell s5">Индивидуальная обратная связь от Рамзеса в течение 6 недель</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Сессия на проработку убеждений</div>
+      <div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell s3">1 личная сессия с Рамзесом для проработки убеждений</div><div class="mc-cell s4">1 личная сессия с Рамзесом для проработки убеждений</div><div class="mc-cell s5">Неограниченная поддержка от Рамзеса касательно работы с убеждениями, страхами, негативными паттернами в течение 6 недель</div>
+    </div>
+
+    <div class="mc-section">ОБЩИЕ БОНУСЫ</div>
+
+    <div class="mc-row">
+      <div class="mc-label">Общий чат участников</div>
+      <div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Групповые онлайн-разборы с Рамзесом раз в месяц для всех участников потока</div>
+      <div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div><div class="mc-cell common">✓</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Подписка на 6 месяцев на искусственный интеллект для переписок VIBE AI</div>
+      <div class="mc-cell no">—</div><div class="mc-cell s2">Входит</div><div class="mc-cell s3">Входит</div><div class="mc-cell s4">Входит</div><div class="mc-cell s5">Входит</div>
+    </div>
+
+    <div class="mc-section">ЖИВОЕ НАСТАВНИЧЕСТВО</div>
+
+    <div class="mc-row">
+      <div class="mc-label">Живое наставничество</div>
+      <div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell s4">Групповое живое наставничество в Москве</div><div class="mc-cell s5">Полное живое ведение от Рамзеса 1 на 1 как тренера и психолога</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Выходы в поля</div>
+      <div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell s4">3 групповых выхода в поля еженедельно (улицы, кафе, ночные клубы)</div><div class="mc-cell s5">Совместные выходы 1 на 1 днём, ночью, на мероприятиях 3 раза в неделю. Частота подбирается индивидуально</div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-label">Условия участия</div>
+      <div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell no">—</div><div class="mc-cell s4">Только через<br>интервью</div><div class="mc-cell s5">Только через<br>интервью</div>
+    </div>
+
+    <div class="mc-section">КОЛИЧЕСТВО МЕСТ</div>
+
+    
+    <div class="mc-row mc-seats">
+      <div class="mc-label">Мест в потоке</div>
+      <div class="mc-cell">20 мест</div><div class="mc-cell s2">15 мест</div><div class="mc-cell s3">10 мест</div><div class="mc-cell s4">4 места</div><div class="mc-cell s5">1 место</div>
+    </div>
+  </div>
+</div>
     <button class="modal-close" onclick="closeTierModal()">×</button>
     <h3>Все тарифы построчно</h3>
     <p class="hint">Полный состав каждого формата — чтобы ты выбирал осознанно.</p>
@@ -2593,24 +3165,61 @@ function scrollToForm(){
 const form = document.getElementById('form');
 if(form) form.scrollIntoView({behavior:'smooth', block:'start'});
 }
+function alignTierDetailRows(){
+  if(!window.matchMedia('(min-width:861px)').matches) return;
+  const tiersWrap = document.querySelector('.tiers');
+  if(!tiersWrap) return;
+  const tiers = Array.from(tiersWrap.querySelectorAll(':scope > .tier')).filter(t => getComputedStyle(t).display !== 'none');
+  if(!tiers.length) return;
+  const lists = tiers.map(t => t.querySelector('.tier-details-desktop'));
+  const maxRows = Math.max(...lists.map(list => list ? list.children.length : 0));
+
+  // Сбрасываем предыдущие высоты, затем для каждой строки берём высоту самого длинного пункта.
+  lists.forEach(list => {
+    if(!list) return;
+    Array.from(list.children).forEach(li => { li.style.height = ''; li.style.minHeight = ''; });
+  });
+
+  for(let row = 0; row < maxRows; row++){
+    let maxHeight = 0;
+    const items = [];
+    lists.forEach(list => {
+      const li = list && list.children[row];
+      if(!li) return;
+      items.push(li);
+      maxHeight = Math.max(maxHeight, li.getBoundingClientRect().height);
+    });
+    items.forEach(li => { li.style.height = Math.ceil(maxHeight) + 'px'; });
+  }
+}
+
 function toggleAllTiers(){
   const tiers = document.querySelector('.tiers');
   if(!tiers) return;
   tiers.classList.add('show-all');
+  // Ждём, пока 4-й и 5-й тарифы появятся в сетке, и только потом измеряем строки.
+  requestAnimationFrame(() => requestAnimationFrame(alignTierDetailRows));
 }
+
+window.addEventListener('load', alignTierDetailRows);
+window.addEventListener('resize', () => {
+  clearTimeout(window.__tierAlignTimer);
+  window.__tierAlignTimer = setTimeout(alignTierDetailRows, 80);
+});
 function openTierModal(){
   const modal = document.getElementById('tierModal');
   const closeHint = document.getElementById('tierCloseRotateHint');
   if(closeHint){ closeHint.classList.remove('show'); closeHint.setAttribute('aria-hidden','true'); }
   if(modal) modal.classList.add('open');
+  if(window.matchMedia('(max-width:860px)').matches){
+    document.body.classList.add('mobile-compare-open');
+  }
 }
 function closeTierModal(){
   const modal = document.getElementById('tierModal');
   if(modal) modal.classList.remove('open');
-  // Закрыли таблицу на телефоне — сразу просим вернуть телефон вертикально.
   if(window.matchMedia('(max-width:860px)').matches){
-    const closeHint = document.getElementById('tierCloseRotateHint');
-    if(closeHint){ closeHint.classList.add('show'); closeHint.setAttribute('aria-hidden','false'); }
+    document.body.classList.remove('mobile-compare-open');
   }
 }
 function hideTierCloseRotateHint(){
@@ -2848,5 +3457,205 @@ countIo.unobserve(el);
 counters.forEach(c=>countIo.observe(c));
 </script>
 
+<script>
+/* ---------- ТАРИФЫ: строки деталей выравниваются по самому высокому пункту ---------- */
+(function(){
+  function alignTierDetailRows(){
+    var isDesktop = window.innerWidth >= 861;
+    var lists = Array.prototype.slice.call(document.querySelectorAll('.tiers .tier-details-desktop'));
+    if(!lists.length) return;
+
+    /* Сначала снимаем прошлые размеры, чтобы каждый пункт измерялся в своей
+       естественной высоте. */
+    lists.forEach(function(list){
+      Array.prototype.forEach.call(list.children, function(li){
+        li.style.height = '';
+      });
+    });
+
+    if(!isDesktop) return;
+
+    var maxHeights = [];
+    lists.forEach(function(list){
+      Array.prototype.forEach.call(list.children, function(li, index){
+        if(li.classList.contains('detail-meta')) return;
+        var h = li.getBoundingClientRect().height;
+        if(h > (maxHeights[index] || 0)) maxHeights[index] = h;
+      });
+    });
+
+    lists.forEach(function(list){
+      Array.prototype.forEach.call(list.children, function(li, index){
+        if(li.classList.contains('detail-meta')) return;
+        if(maxHeights[index]) li.style.height = maxHeights[index] + 'px';
+      });
+    });
+  }
+
+  var tierAlignTimer;
+  function scheduleTierAlign(){
+    clearTimeout(tierAlignTimer);
+    tierAlignTimer = setTimeout(function(){
+      requestAnimationFrame(function(){
+        alignTierDetailRows();
+        requestAnimationFrame(alignTierDetailRows);
+      });
+    }, 40);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', scheduleTierAlign);
+  }else{
+    scheduleTierAlign();
+  }
+  window.addEventListener('load', scheduleTierAlign);
+  window.addEventListener('resize', scheduleTierAlign);
+})();
+</script>
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    const modal = document.getElementById('tierModal');
+    if(modal && modal.classList.contains('open')) closeTierModal();
+  }
+});
+
 </body>
-</html>
+</html><style id="mobile-compare-final-fix">
+@media (max-width:860px){
+  /* Один горизонтально прокручиваемый лист: 5 тарифов остаются в одной строке. */
+  #tierModal .mobile-compare{
+    width:100%;
+    height:100%;
+    min-width:0;
+    overflow:auto !important;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    background:#101010;
+  }
+
+  #tierModal .mobile-compare-top{
+    position:sticky !important;
+    top:0 !important;
+    left:0 !important;
+    width:100vw !important;
+    min-width:100vw !important;
+    z-index:50 !important;
+  }
+
+  /* Шапка тарифов фиксирована по вертикали и листается вместе с колонками по горизонтали. */
+  #tierModal .mobile-compare-head{
+    position:sticky !important;
+    top:42px !important;
+    width:760px !important;
+    min-width:760px !important;
+    grid-template-columns:170px repeat(5,118px) !important;
+    z-index:40 !important;
+    background:#1d1d1d !important;
+  }
+
+  #tierModal .mobile-compare-scroll{
+    width:760px !important;
+    min-width:760px !important;
+    overflow:visible !important;
+    padding-bottom:30px !important;
+  }
+
+  #tierModal .mc-row{
+    width:760px !important;
+    min-width:760px !important;
+    grid-template-columns:170px repeat(5,118px) !important;
+  }
+
+  #tierModal .mc-section{
+    width:760px !important;
+    min-width:760px !important;
+    position:sticky !important;
+    left:0 !important;
+  }
+
+  /* Размер текста как на основном сайте, без выхода за границы ячеек. */
+  #tierModal .mc-plan{
+    min-height:82px !important;
+    padding:8px 5px !important;
+    font-size:12px !important;
+    line-height:1.25 !important;
+    color:#fff !important;
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+  }
+  #tierModal .mc-plan span{
+    font-size:12px !important;
+    line-height:1.25 !important;
+    color:#fff !important;
+    overflow-wrap:anywhere !important;
+  }
+  #tierModal .mc-head-label{
+    font-size:10px !important;
+    color:#fff !important;
+  }
+
+  #tierModal .mc-label{
+    padding:9px 7px !important;
+    font-size:12px !important;
+    line-height:1.45 !important;
+    color:#fff !important;
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+    white-space:normal !important;
+  }
+  #tierModal .mc-cell{
+    padding:9px 6px !important;
+    font-size:12px !important;
+    line-height:1.45 !important;
+    color:#fff !important;
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+    white-space:normal !important;
+    text-align:center;
+  }
+  #tierModal .mc-cell.common{font-size:14px !important;color:#fff !important;}
+  #tierModal .mc-cell.no{color:#fff !important;opacity:.45;}
+  #tierModal .mc-cell.s2,
+  #tierModal .mc-cell.s3,
+  #tierModal .mc-cell.s4,
+  #tierModal .mc-cell.s5,
+  #tierModal .mc-row.mc-price .mc-cell,
+  #tierModal .mc-row.mc-seats .mc-cell{
+    color:#fff !important;
+  }
+
+  #tierModal .mc-section{
+    padding:8px 7px !important;
+    font-size:11px !important;
+    line-height:1.3 !important;
+    color:#fff !important;
+  }
+
+  /* Сохраняем разделители и не даём длинному тексту вылезать наружу. */
+  #tierModal .mc-row > div{
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    overflow-wrap:anywhere !important;
+  }
+  #tierModal .mc-row > div *{
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+  }
+}
+
+@media (max-width:380px){
+  #tierModal .mobile-compare-head,
+  #tierModal .mobile-compare-scroll,
+  #tierModal .mc-row,
+  #tierModal .mc-section{width:720px !important;min-width:720px !important;}
+  #tierModal .mobile-compare-head,
+  #tierModal .mc-row{grid-template-columns:155px repeat(5,113px) !important;}
+  #tierModal .mc-plan,
+  #tierModal .mc-plan span,
+  #tierModal .mc-label,
+  #tierModal .mc-cell{font-size:11px !important;}
+}
+</style>
